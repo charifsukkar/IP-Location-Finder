@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IP Location Finder Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>IP Location Finder Login</h2>
+  <p>Please enter a valid username and password</p>
+
+  <form class="form-inline" >
+    <label for="user" class="mb-2 mr-sm-2">Username:</label>
+    <input type="text" class="form-control mb-2 mr-sm-2" id="user" placeholder="Enter Username" name="username">
+    <label for="pswd" class="mb-2 mr-sm-2">Password:</label>
+    <input type="password" class="form-control mb-2 mr-sm-2" id="pswd" placeholder="Enter password" name="password">
+    <div class="form-check mb-2 mr-sm-2">
+      <label class="form-check-label">
+        <input onclick="showPass()" type="checkbox" class="form-check-input" name="remember"> Show password
+      </label>
+    </div>
+    
+    <div class="form-check mb-2 mr-sm-2">
+      <label for= "hint" class="form-check-label">
+        <input type="checkbox" onclick= "showHint()" class="form-check-input" id= "hint"> Show hint
+        <p id="hint_text" style="display:none">Username: admin Password: admin</p>
+      </label>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary mb-2" onclick= "validate()">Submit</button>
+  </form>
+</div>
+
+<script>
+  // this function validates the username and password and compares it to see if it matches
+  function validate(){
+        var username =  document.getElementById("user").value;
+        var password =  document.getElementById("pswd").value;
+        if (username == "admin" && password == "admin"){
+          alert("Login successful");
+          window.open("IP_Location_Finder.html")
+        }else{
+          alert("Login failed")
+          location.reload
+        }
+      }
+
+
+
+  // this function checks the input type and if it is a password it automatically censors the text
+    function showPass(){
+        var x = document.getElementById("pswd");
+        if(x.type === "password"){
+            x.type = "text";
+        } else{
+            x.type = "password"
+        }
+    }
+
+    function showHint() {
+      var checkBox = document.getElementById("hint");
+      var text = document.getElementById("hint_text");
+      if (checkBox.checked == true){
+        text.style.display = "block";
+      } else {
+        text.style.display = "none";
+      }
+    }
+
+
+
+
+    
+
+      
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang= "en-US">
+<head>
+    <title>IP Location Finder</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- link to JQuery --> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap for the JSON grid -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- gets the leaflet CSS file -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin="" />
+
+    <style>
+        h1, div, form {text-align:center
+        }
+        
+        #map {height: 180px}
+    </style>
+    
+        
+        
+    
+        
+        
+</head>
+<body>
+    <div class="jumbotron">
+        <h1 class="display-1">IP Location Finder</h1>
+        <p>Find the location of any IP address in an instant!</p>
+    </div>
+        <br>
+        <!-- Input to accept the IP Address -->
+        <form>
+            <input type = "text" method="GET" id="IPaddress" placeholder="Enter IP Address">
+            <button type= "button" class= "btn" onclick= "IPlocation()"> Submit </button>
+        </form>
+        <br>
+        <!-- Buttons that perfrom the functions to obtain the IP addressses -->
+        <div>
+            
+			<button type= "button" class= "btn" onclick= "myIP()"> Check my IP </button>
+        </div>
+        <br>
+     
+
+        <!-- Specify's the map's placement and it's dimensions -->
+        <div id="mapid" style="height: 600px; width: 400; margin-right: 500px; margin-left: 500px;"></div>
+  
+         <!-- Get's the leafletJS file   -->
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+            integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+            crossorigin="">
+        </script>
+
+        <script>
+            const mymap = L.map('mapid')
+            //  function that draws the map
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(mymap);
+            // sets the default view of the map to the coordinates of Ryerson University
+            mymap.setView([43.659, -79.379], 12);      
+        </script>
+    <br>
+
+    <script>
+        function IPlocation(){    
+            var Lat = 0;
+            var Long = 0;
+			
+			var sLat = "";
+            var sLong = "";
+			
+            // grabs the IP address from the input then assigns that variable to the IPfind API
+      		var searchvalue = document.getElementById("IPaddress").value;
+            var IP_Address_URL = "https://api.ipfind.com?ip=" + searchvalue + "&auth=27880c03-9122-4971-ba86-dbeecbbe88bf";
+           
+            // inputs the JSON data from the console to the website itself
+            $.ajax({
+                type:"GET",
+                url: IP_Address_URL,
+                success:function(response){
+                    $(".ip_address").append(response.ip_address);
+                    $(".country").append(response.country);
+                    $(".city").append(response.city);
+                    $(".region").append(response.region);
+                    $(".timezone").append(response.timezone);
+                    $(".longitude").append(response.longitude); 
+                    $(".latitude").append(response.latitude);
+						
+                    document.getElementById("latitude").innerHTML = response.latitude;
+					document.getElementById("longitude").innerHTML = response.longitude;
+                
+                    // takes the Lat/Long data in the grid and assigns it to the string variables
+                    sLat = document.getElementById("latitude").innerHTML; 
+			        sLong = document.getElementById("longitude").innerHTML; 
+			
+					// sets the string variables to integer variables to display them on the map 
+			        Lat = sLat; 
+			        Long = sLong; 
+                    // Sets the marker to the map and then pans to it 
+                    L.marker([Lat, Long]).addTo(mymap);
+                    mymap.setView([Lat, Long]);
+                    marker.bindPopup(Lat, Long).openPopup();
+                },	
+            });
+        };
+		
+	    function myIP(){    
+            var Lat = 0;
+            var Long = 0;
+			
+			var sLat = "";
+            var sLong = "";
+         
+            //  this API link gets the IP Address from the client accessing the site
+            $.ajax({
+                type:"GET",
+                url: "https://api.ipfind.com/me?auth=9e0eae37-8f2f-4966-8179-76af01187cc5",
+                success:function(response){
+                    $(".ip_address").append(response.ip_address);
+                    $(".country").append(response.country);
+                    $(".city").append(response.city);
+                    $(".region").append(response.region);
+                    $(".timezone").append(response.timezone);
+                    // $(".longitude").append(response.longitude); 
+                    // $(".latitude").append(response.latitude);
+
+					document.getElementById("latitude").innerHTML = response.latitude;
+					document.getElementById("longitude").innerHTML = response.longitude;			
+						
+                    // takes the Lat/Long data in the grid and assigns it to the string variables
+                    sLat = document.getElementById("latitude").innerHTML; 
+			        sLong = document.getElementById("longitude").innerHTML; 
+			
+					// sets the string variables to integer variables to display them on the map 
+                    Lat = sLat; 
+			        Long = sLong; 
+                 
+                    // Sets the marker to the map and then pans to it 
+                    L.marker([Lat, Long]).addTo(mymap);
+                    mymap.setView([Lat, Long]);
+                    marker.bindPopup(Lat, Long).openPopup();
+                },
+            });
+	    };	
+    </script>
+
+
+     
+      
+<!--  responsive grid to accept the IPfind JSON metadata to display to the user  -->
+	  <div class= "container">
+            <div class= "table-responsive">
+                <table class = "table table-bordered table-striped">
+                    <tr>
+                        <td>IP Address</td>
+                        <td class= "ip_address"> </td>
+                    </tr>
+                    <tr>
+                        <td>Country</td>
+                        <td class= "country"></td>
+                    </tr>
+                    <tr>
+                        <td>City</td>
+                        <td class= "city"></td>
+                    </tr>
+                    <tr>
+                        <td>Region</td>
+                        <td class= "region"></td>
+                    </tr>
+                    <tr>
+                        <td>Time Zone</td>
+                        <td class= "timezone"></td>
+                    </tr>
+                    <tr>
+                        <td>Longitude</td>
+                        <td class= "longitudeC"><p id="longitude"></p</td>
+                    </tr>
+                    <tr>
+                        <td>Latitude</td>
+                        <td class= "latitudeC"><p id="latitude"></p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+       
+    </body>
+</html>
